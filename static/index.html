@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f3f5f7">
+    <title>Lingua V1 — local video subtitles</title>
+    <link rel="icon" href="/static/lingua.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Lingua home"><span class="brand-mark">L</span> Lingua V1</a>
+      <div class="topbar-actions">
+        <span class="privacy"><span class="privacy-dot"></span> Your videos stay on this device</span>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode">
+          <span id="theme-icon" aria-hidden="true">☾</span>
+          <span id="theme-label">Dark</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <p class="eyebrow">VIDEO, UNDERSTOOD</p>
+        <h1><span class="sapphire-heading">Every voice.</span><br><em>Every language.</em></h1>
+        <p class="intro-copy">Translate your video, preview every subtitle, and download the finished video.</p>
+      </section>
+
+      <section class="workspace" aria-label="Translate a video">
+        <div class="section-heading">
+          <div><span class="step">01</span><h2>Choose your languages</h2></div>
+          <span class="local-tag">LOCAL PROCESSING</span>
+        </div>
+        <label class="field engine-field" for="translation-engine">
+          <span>Translation engine</span>
+          <select id="translation-engine">
+            <option value="argos">Argos Translate · on this computer</option>
+            <option value="ollama">Qwen3 · on this computer</option>
+            <option value="google" selected>Google Translate · on the internet</option>
+          </select>
+        </label>
+        <div class="model-message" id="engine-message" role="status">
+          Argos Translate runs locally and uses installed language models.
+        </div>
+        <div class="language-row">
+          <label class="field">
+            <span>Video language</span>
+            <select id="source-language">
+              <option value="">Auto-detect</option>
+            </select>
+          </label>
+          <div class="language-arrow" aria-hidden="true">→</div>
+          <label class="field">
+            <span>Translate to</span>
+            <select id="target-language" disabled>
+              <option value="">Loading local languages…</option>
+            </select>
+          </label>
+        </div>
+        <div class="model-message" id="language-message" role="status"></div>
+
+        <div class="section-heading upload-heading">
+          <div><span class="step">02</span><h2>Add your video</h2></div>
+          <span class="file-note">MP4, MKV, MOV, WEBM, AVI, M4V · up to 16 GB</span>
+        </div>
+        <label class="dropzone" id="dropzone" for="video-file">
+          <input id="video-file" type="file" accept=".mp4,.mkv,.mov,.webm,.avi,.m4v,video/*">
+          <span class="upload-icon" aria-hidden="true">↑</span>
+          <strong id="file-label">Drop a video here or <span>browse files</span></strong>
+          <small>Your video stays here while you review it and is removed after rendering.</small>
+        </label>
+
+        <button class="primary-button" id="start-button" disabled>Translate video <span aria-hidden="true">↗</span></button>
+
+        <section class="progress-panel hidden" id="progress-panel" aria-live="polite">
+          <div class="progress-top"><strong id="progress-stage">Preparing…</strong><span id="progress-value">0%</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+          <p id="progress-note">Speech recognition runs locally and can take a while for longer videos.</p>
+        </section>
+
+        <section class="results hidden" id="results">
+          <div class="section-heading result-heading">
+            <div><span class="step">03</span><h2>Preview and edit subtitles</h2></div>
+            <span class="file-note" id="detected-language"></span>
+          </div>
+          <p class="review-note">Play the video to preview the translated subtitles. Edit any line before rendering.</p>
+          <div class="video-preview">
+            <video id="video-preview" controls playsinline preload="metadata"></video>
+            <div id="preview-caption" class="hidden" aria-live="polite"></div>
+          </div>
+          <div class="preview-controls" aria-label="Subtitle preview appearance">
+            <label class="preview-control" for="subtitle-font-size">
+              <span>Text size</span>
+              <div class="range-control">
+                <input id="subtitle-font-size" type="range" min="12" max="36" value="16">
+                <input id="subtitle-font-size-number" type="number" min="12" max="36" step="1" value="16" aria-label="Subtitle text size in pixels">
+                <span>px</span>
+              </div>
+              <div class="position-buttons">
+                <button type="button" id="font-size-up" class="small-button" title="Aumentar texto" aria-label="Aumentar texto">▲</button>
+                <button type="button" id="font-size-down" class="small-button" title="Reducir texto" aria-label="Reducir texto">▼</button>
+              </div>
+            </label>
+            <label class="preview-control" for="subtitle-position">
+              <span>Vertical position</span>
+              <div class="range-control">
+                <input id="subtitle-position" type="range" min="6" max="94" value="18">
+                <input id="subtitle-position-number" type="number" min="6" max="94" step="1" value="18" aria-label="Vertical position percent">
+                <span>% desde abajo</span>
+              </div>
+              <div class="position-buttons">
+                <button type="button" id="position-up" class="small-button" title="Subir texto" aria-label="Subir texto">▲</button>
+                <button type="button" id="position-down" class="small-button" title="Bajar texto" aria-label="Bajar texto">▼</button>
+              </div>
+            </label>
+            <label class="preview-control" for="subtitle-text-color">
+              <span>Text color</span>
+              <div class="color-control">
+                <input id="subtitle-text-color" type="color" value="#FFFFFF">
+                <output id="subtitle-text-color-value" for="subtitle-text-color">#FFFFFF</output>
+              </div>
+            </label>
+            <label class="preview-control" for="subtitle-background-opacity">
+              <span>Background opacity</span>
+              <div class="range-control">
+                <input id="subtitle-background-opacity" type="range" min="0" max="100" value="72">
+                <input id="subtitle-background-opacity-number" type="number" min="0" max="100" step="1" value="72" aria-label="Background opacity percent">
+                <span>%</span>
+              </div>
+            </label>
+            <label class="preview-control" for="subtitle-background-color">
+              <span>Subtitle background</span>
+              <div class="color-control">
+                <input id="subtitle-background-color" type="color" value="#000000">
+                <output id="subtitle-background-color-value" for="subtitle-background-color">#000000</output>
+              </div>
+            </label>
+          </div>
+          <div class="subtitle-list" id="subtitle-list"></div>
+          <p class="preview-note">Drag the subtitle on the video to move it. Enter a number for text size; size, position, and colors are applied to the downloaded video.</p>
+          <label class="dubbing-toggle">
+            <input id="dubbing-enabled" type="checkbox">
+            <span>Include optional dubbing in the video</span>
+          </label>
+          <p class="dubbing-note">Off by default. When enabled, the translated voice is mixed over the original audio at a lower volume.</p>
+          <label class="voice-control hidden" id="dubbing-voice-control" for="dubbing-voice">
+            <span>Choose an installed voice</span>
+            <select id="dubbing-voice" disabled>
+              <option value="auto">Automática (voz similar a la original)</option>
+              <option value="">Choose a target language first</option>
+            </select>
+          </label>
+          <p class="dubbing-note" id="dubbing-status" role="status"></p>
+          <div class="result-actions">
+            <button class="primary-button" id="render-button" type="button">Create translated video <span aria-hidden="true">↗</span></button>
+            <a class="primary-button download-button hidden" id="download-button" href="#" download>Guardar video (elige ubicación) <span aria-hidden="true">↓</span></a>
+          </div>
+        </section>
+
+        <div class="error-message hidden" id="error-message" role="alert"></div>
+      </section>
+
+      <footer>
+        <span>OPEN SOURCE · RUNS ON YOUR COMPUTER</span>
+        <span id="engine-footer">Speech recognition: Whisper · Translation: Argos Translate</span>
+      </footer>
+    </main>
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>

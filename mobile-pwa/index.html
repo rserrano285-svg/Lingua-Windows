@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#202a35">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Lingua">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <title>Lingua — traducción de video</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Lingua inicio">
+          <span class="brand-mark">L</span>
+          <span>Lingua</span>
+        </a>
+        <div class="topbar-actions">
+          <span class="local-status"><span class="status-dot"></span> Sin nube</span>
+          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar a modo oscuro">
+            <span id="theme-icon" aria-hidden="true">☾</span>
+            <span id="theme-label">Oscuro</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="intro">
+        <p class="eyebrow">TRADUCCIÓN LOCAL DE VIDEO</p>
+        <h1>Tu video,<br><em>en otro idioma.</em></h1>
+        <p>Transcribe, traduce y crea un video subtitulado en este navegador. Si eliges Qwen3, solo el texto de los subtítulos se envía por la red local a tu laptop.</p>
+      </section>
+
+      <section class="card">
+        <div class="section-title">
+          <span class="step">01</span>
+          <h2>Elige idiomas y video</h2>
+        </div>
+        <div class="language-row">
+          <label class="field">
+            <span>Idioma del audio</span>
+            <select id="source-language">
+              <option value="es">Español</option>
+              <option value="en">Inglés</option>
+              <option value="fr">Francés</option>
+              <option value="de">Alemán</option>
+              <option value="it">Italiano</option>
+              <option value="pt">Portugués</option>
+              <option value="ru">Ruso</option>
+              <option value="zh">Chino</option>
+              <option value="ja">Japonés</option>
+              <option value="ar">Árabe</option>
+              <option value="hi">Hindi</option>
+              <option value="nl">Neerlandés</option>
+              <option value="sv">Sueco</option>
+              <option value="auto">Detectar automáticamente</option>
+            </select>
+          </label>
+          <span class="arrow" aria-hidden="true">→</span>
+          <label class="field">
+            <span>Traducir a</span>
+            <select id="target-language">
+              <option value="en">Inglés</option>
+              <option value="es">Español</option>
+              <option value="fr">Francés</option>
+              <option value="de">Alemán</option>
+              <option value="it">Italiano</option>
+              <option value="pt">Portugués</option>
+              <option value="ru">Ruso</option>
+              <option value="zh">Chino</option>
+              <option value="ja">Japonés</option>
+              <option value="ar">Árabe</option>
+              <option value="hi">Hindi</option>
+              <option value="nl">Neerlandés</option>
+              <option value="sv">Sueco</option>
+            </select>
+          </label>
+        </div>
+        <label class="field engine-field" for="translation-engine">
+          <span>Motor de traducción</span>
+          <select id="translation-engine">
+            <option value="device">En este dispositivo (local)</option>
+            <option value="ollama">Qwen3:8b en mi laptop</option>
+          </select>
+        </label>
+        <p id="engine-help" class="notice" aria-live="polite">
+          El modelo local traduce en este dispositivo. No necesita que la laptop esté encendida.
+        </p>
+        <p id="engine-status" class="engine-status hidden" role="status"></p>
+
+        <label class="file-picker" for="video-file">
+          <input id="video-file" type="file" accept="video/mp4,video/quicktime,.mp4,.mov">
+          <span class="upload-mark" aria-hidden="true">↑</span>
+          <strong id="file-name">Selecciona un video MP4 o MOV</strong>
+          <small id="file-detail">Prueba inicial: clips de hasta 8 min y 100 MB.</small>
+        </label>
+
+        <p class="notice">
+          El objetivo final es aceptar hasta 2 GB, pero los archivos grandes aún no están validados en iPhone.
+          La primera descarga del modelo necesita Internet; el video permanece en el teléfono.
+        </p>
+        <p id="offline-guidance" class="notice" role="status" aria-live="polite">
+          Preparando información de uso sin conexión…
+        </p>
+
+        <div id="source-preview-slot">
+          <div id="source-preview-stage" class="video-stage hidden">
+            <video id="source-preview" class="video-preview" controls playsinline preload="metadata"></video>
+            <div id="subtitle-preview" class="subtitle-preview hidden" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="subtitle-style-controls" aria-label="Apariencia de subtítulos">
+          <label class="style-field" for="subtitle-font-size">
+            <span>Tamaño de letra</span>
+            <div class="style-range">
+              <input id="subtitle-font-size" type="range" min="12" max="36" value="16">
+              <input id="subtitle-font-size-number" type="number" min="12" max="36" step="1" value="16" aria-label="Tamaño de letra en píxeles">
+              <span>px</span>
+            </div>
+          </label>
+          <label class="style-field" for="subtitle-position">
+            <span>Posición vertical <output id="subtitle-position-value" for="subtitle-position">18% desde abajo</output></span>
+            <input id="subtitle-position" type="range" min="6" max="94" value="18">
+          </label>
+          <label class="style-field color-field" for="subtitle-text-color">
+            <span>Color del texto</span>
+            <div class="style-color">
+              <input id="subtitle-text-color" type="color" value="#ffffff">
+              <output id="subtitle-text-color-value" for="subtitle-text-color">#FFFFFF</output>
+            </div>
+          </label>
+          <label class="style-field color-field" for="subtitle-background-color">
+            <span>Fondo del subtítulo</span>
+            <div class="style-color">
+              <input id="subtitle-background-color" type="color" value="#000000">
+              <output id="subtitle-background-color-value" for="subtitle-background-color">#000000</output>
+            </div>
+          </label>
+        </div>
+        <p class="preview-hint">Elige el tamaño y los colores antes de transcribir. Al seleccionar un video, verás una muestra y luego los subtítulos reales.</p>
+        <button id="translate-button" class="primary-button" type="button" disabled>
+          Transcribir y traducir <span aria-hidden="true">↗</span>
+        </button>
+
+        <section id="progress-panel" class="progress-panel hidden" aria-live="polite">
+          <div class="progress-heading">
+            <strong id="progress-stage">Preparando…</strong>
+            <span id="progress-percent"></span>
+          </div>
+          <progress id="progress-bar" max="100" value="0"></progress>
+          <p id="progress-detail"></p>
+        </section>
+
+        <section id="results" class="results hidden">
+          <div class="section-title">
+            <span class="step">02</span>
+            <h2>Revisa los subtítulos</h2>
+          </div>
+          <p class="correction-hint">
+            Si Whisper entendió mal una palabra, edita la transcripción original y pulsa “Traducir de nuevo con IA”. Si la transcripción está bien pero la traducción no, usa “Revisar traducción con IA”. Ambas opciones requieren Qwen3 en la laptop; solo se envían textos por la red local.
+          </p>
+          <div id="subtitle-list" class="subtitle-list"></div>
+          <button id="render-button" class="primary-button" type="button">
+            Crear video subtitulado <span aria-hidden="true">↗</span>
+          </button>
+          <video id="output-preview" class="video-preview hidden" controls playsinline preload="metadata"></video>
+          <button id="share-button" class="primary-button share-button hidden" type="button">
+            Compartir para guardar en Fotos <span aria-hidden="true">↗</span>
+          </button>
+          <p id="share-help" class="share-help hidden"></p>
+          <a id="download-button" class="secondary-button download-button hidden" download="lingua-traducido.mp4">
+            Descargar MP4 subtitulado <span aria-hidden="true">↓</span>
+          </a>
+        </section>
+
+        <p id="error-message" class="error-message hidden" role="alert"></p>
+      </section>
+
+      <footer>
+        <span>PROTOTIPO EXPERIMENTAL · SIN CUENTA</span>
+        <span>Video y audio en el navegador · sin nube</span>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Lingua Video Translator",
+  "short_name": "Lingua",
+  "description": "Traduce videos cortos en el dispositivo.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3f5f7",
+  "theme_color": "#202a35",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Flask>=3.0,<4
+faster-whisper>=1.1,<2
+argostranslate>=1.9,<2
+av>=11,<18
+imageio-ffmpeg>=0.5,<1
+pyttsx3>=2.90,<3
