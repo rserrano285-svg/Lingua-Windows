@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+$env:PYTHONDONTWRITEBYTECODE = "1"
 
 $projectRoot = $PSScriptRoot
 $python = Join-Path $projectRoot ".venv\Scripts\pythonw.exe"

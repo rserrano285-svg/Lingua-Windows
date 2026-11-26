@@ -17,7 +17,7 @@ from flask import Flask, abort, jsonify, request, send_file, send_from_directory
 from werkzeug.utils import secure_filename
 
 APP_DIR = Path(__file__).resolve().parent
-DATA_DIR = Path(os.environ.get("VIDEO_TRANSLATOR_DATA", Path.home() / "Proyectos" / "Lingua Windows" / "datos"))
+DATA_DIR = Path(os.environ.get("VIDEO_TRANSLATOR_DATA", Path.home() / "Downloads" / "Lingua Windows" / "datos"))
 JOBS_DIR = DATA_DIR / "jobs"
 EXPORT_DIR = DATA_DIR / "exports"
 ALLOWED_EXTENSIONS = {".mp4", ".mkv", ".mov", ".webm", ".avi", ".m4v"}

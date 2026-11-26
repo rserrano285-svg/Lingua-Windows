@@ -54,7 +54,7 @@ python app.py
 
 Open http://127.0.0.1:5000. The app binds to the local computer only. Supported uploads are MP4, MKV, MOV, WEBM, AVI and M4V; the upload limit is 16 GB. Processing large videos takes longer and needs extra free disk space.
 
-On Windows, double-click `start-lingua.ps1` (or the "Lingua Windows" desktop shortcut) to open the app without a visible console window. The server runs hidden with `pythonw.exe`; close the `pythonw.exe` process to stop it. Finished videos are downloaded through the browser to Downloads, or to the location you choose with **Save video (choose location)** in Chromium browsers.
+On Windows, double-click `start-lingua.ps1` (or the "Lingua Windows" desktop shortcut) to open the app without a visible console window. The server runs hidden with `pythonw.exe`; close the `pythonw.exe` process to stop it. Finished videos are downloaded to `~/Downloads` (or the location you choose with **Save video (choose location)** in Chromium browsers); working files live under `~/Downloads/Lingua Windows/datos`.
 
 ## Speech model size
 
@@ -67,7 +67,7 @@ python app.py
 
 ## Privacy and limitations
 
-- Uploaded videos and rendered copies are kept temporarily under `datos\jobs` and `datos\exports` inside this folder; remove them when you no longer need them. Nothing is uploaded except subtitle text when Google or Qwen3 is selected.
+- Uploaded videos and rendered copies are kept temporarily under `~/Downloads/Lingua Windows/datos/jobs` and `.../exports`, never inside the project folder; delete that folder in Downloads when you no longer need them. Nothing is uploaded except subtitle text when Google or Qwen3 is selected.
 - Processing runs on the CPU and can take longer than the video duration.
 - Source-language detection and automatic translations can make mistakes, especially with noisy audio, overlapping speakers, accents, names, and specialist terms.
 - Subtitles are burned into the downloaded video and cannot be switched off in the player.
