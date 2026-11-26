@@ -77,3 +77,8 @@ python app.py
 ## License
 
 MIT
+
+
+## Support
+
+Lingua is free and open source. If it saves you time, you can support development with a voluntary donation: [PayPal (rene285serrano)](https://paypal.me/rene285serrano). Any amount helps.

@@ -150,3 +150,14 @@ footer { display: flex; justify-content: space-between; gap: 12px; padding: 24px
 .small-button:hover {
   background: var(--accent-soft, #e8f0ff);
 }
+
+
+.donate-link {
+  color: var(--accent, #2563eb);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.donate-link:hover {
+  text-decoration: underline;
+}
