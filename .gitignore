@@ -2,7 +2,6 @@ __pycache__/
 .venv/
 *.py[cod]
 .env
-
 datos/
-mobile-pwa/node_modules/
+node_modules/
 *.log
