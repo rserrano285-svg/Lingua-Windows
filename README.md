@@ -1,4 +1,4 @@
-# Lingua V1
+# Lingua
 
 Lingua is an open-source Windows desktop app for translating videos locally in the browser. It transcribes speech with [faster-whisper](https://github.com/SYSTRAN/faster-whisper), translates subtitles with **Google Translate**, **Argos Translate** or an optional local **Qwen3** model, and produces a downloadable MP4 with translated subtitles burned into the picture.
 
