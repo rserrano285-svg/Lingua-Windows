@@ -24,6 +24,20 @@ const subtitleList = document.querySelector("#subtitle-list");
 const detectedLanguage = document.querySelector("#detected-language");
 const renderButton = document.querySelector("#render-button");
 const downloadButton = document.querySelector("#download-button");
+
+// Guardar con nombre incremental: lingua-translated1.mp4, lingua-translated2.mp4...
+function nextSaveName(base, ext) {
+  let n = 1;
+  try {
+    const counters = JSON.parse(localStorage.getItem("lingua:saveCounter") || "{}");
+    n = (counters[base] || 0) + 1;
+    counters[base] = n;
+    localStorage.setItem("lingua:saveCounter", JSON.stringify(counters));
+  } catch (error) {
+    n = 1;
+  }
+  return `${base}${n}.${ext}`;
+}
 const dubbingStatus = document.querySelector("#dubbing-status");
 const dubbingEnabled = document.querySelector("#dubbing-enabled");
 const dubbingVoiceControl = document.querySelector("#dubbing-voice-control");
@@ -693,11 +707,13 @@ loadLanguages();
 
 
 downloadButton.addEventListener("click", async (event) => {
+  const saveName = nextSaveName("lingua-translated", "mp4");
+  downloadButton.download = saveName;
   if (typeof window.showSaveFilePicker !== "function") return;
   event.preventDefault();
   try {
     const handle = await window.showSaveFilePicker({
-      suggestedName: "lingua-translated.mp4",
+      suggestedName: saveName,
       types: [{ description: "Video MP4", accept: { "video/mp4": [".mp4"] } }],
     });
     downloadButton.disabled = true;
